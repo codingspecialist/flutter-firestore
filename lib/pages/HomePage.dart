@@ -6,6 +6,20 @@ class HomePage extends StatelessWidget {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  Future<void> addUser() {
+    CollectionReference users = firestore.collection('users');
+    // Call the user's CollectionReference to add a new user
+    return users
+        .add({
+          'email': "good2@nate.com",
+          'username': "good2",
+          'phone': "0102222",
+          'age': 25
+        })
+        .then((value) => print("User Added"))
+        .catchError((error) => print("Failed to add user: $error"));
+  }
+
   void login() async {
     UserCredential credential = await auth.signInWithEmailAndPassword(
         email: "ssar@nate.com", password: "123456");
@@ -19,11 +33,14 @@ class HomePage extends StatelessWidget {
 
     // (1)
     UserCredential credential = await auth.createUserWithEmailAndPassword(
-        email: "hello@nate.com", password: "123456");
+        email: "good2@nate.com", password: "123456");
     // 파이어 스토어에도 같이 저장을 해줘야 한다. 그래야 유저 관리를 할 수 있다.
     print(credential.user!.email);
 
     // (2) 이 부분 완성
+    await addUser();
+
+    print("회원가입 완료");
   }
 
   @override
